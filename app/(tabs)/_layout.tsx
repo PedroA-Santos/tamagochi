@@ -1,11 +1,10 @@
+// app/_layout.tsx
 import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
@@ -13,24 +12,30 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
+        options={{ title: 'Tela Inicial' }}
       />
       <Tabs.Screen
-        name="explore"
+        name="telacadastro"
+        options={{ title: 'Tela de Cadastro' }}
+      />
+      <Tabs.Screen
+        name="telalistagem"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
+          title: "Lista"
         }}
+
+      />
+      <Tabs.Screen
+        name="teladetalhe"
+        options={{ title: 'Tela de Detalhes' }}
+      />
+      <Tabs.Screen
+        name="telajogos"
+        options={{ title: 'Tela de Jogos' }}
       />
     </Tabs>
   );
