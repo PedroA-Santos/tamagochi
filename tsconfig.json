@@ -2,6 +2,13 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-native",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
         "./*"
@@ -15,3 +22,24 @@
     "expo-env.d.ts"
   ]
 }
+
+
+// --------  Este abaixo era o original, está comentado caso tenhamos algum problema com o que foi alterado
+
+//{
+//  "extends": "expo/tsconfig.base",
+//  "compilerOptions": {
+//   "strict": true,
+//    "paths": {
+//      "@/*": [
+//        "./*"
+//      ]
+//    }
+//  },
+//  "include": [
+//    "**/*.ts",
+//    "**/*.tsx",
+//    ".expo/types/**/*.ts",
+//    "expo-env.d.ts"
+//  ]
+//}

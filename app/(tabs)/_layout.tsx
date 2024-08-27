@@ -46,7 +46,10 @@ export default function TabsLayout() {
           headerShown: false
         }}
       />
-
+      <Tabs.Screen
+        name="DinoGame"
+        options={{ title: 'DinoGame', tabBarStyle: { display: 'none' } }} //para esconder o tabs na tela do jogo
+      />
     </Tabs>
   );
 }
