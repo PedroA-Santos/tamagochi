@@ -27,7 +27,6 @@ export default function RootLayout() {
         options={{
           title: "Lista"
         }}
-
       />
       <Tabs.Screen
         name="teladetalhe"
@@ -36,6 +35,10 @@ export default function RootLayout() {
       <Tabs.Screen
         name="telajogos"
         options={{ title: 'Tela de Jogos' }}
+      />
+      <Tabs.Screen
+        name="DinoGame"
+        options={{ title: 'DinoGame', tabBarStyle: { display: 'none' } }} //para esconder o tabs na tela do jogo
       />
     </Tabs>
   );
