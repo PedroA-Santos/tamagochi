@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import Header from '@/mycomponents/header';
 import Button from '@/mycomponents/button';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'expo-router';
 
 const telacadastro = () => {
@@ -9,6 +9,7 @@ const telacadastro = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const router = useRouter();
+    const inputPetRef = useRef<TextInput>(null)
 
     const handleNomePet = (text: string) => {
         setInputNomePet(text);
@@ -29,7 +30,14 @@ const telacadastro = () => {
             setSelectedImage("");
             setErrorMessage(null)
         } else if (!inputNomePet && !selectedImage) {
-            setErrorMessage("Preencha os campos obrigatórios")
+            setErrorMessage("Preencha os campos Nome e Imagem do Pet")
+            inputPetRef.current?.focus()
+        }else if (!inputNomePet) {
+            setErrorMessage("Preencha o Nome do pet")
+            inputPetRef.current?.focus()
+        }else if (!selectedImage){
+            setErrorMessage("Selecione a Imagem do seu Pet")
+            inputPetRef.current?.focus()
         }
 
     };
