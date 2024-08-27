@@ -2,6 +2,7 @@ export type RootStackParamList = {
   telainicial: undefined;
   telacadastro: undefined;
   telalistagem: undefined;
-  teladetalhes: undefined;
+  teladetalhe: undefined;
   telajogos: undefined;
+  "(tabs)": undefined;
 };
