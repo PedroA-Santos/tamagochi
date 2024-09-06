@@ -1,45 +1,64 @@
 import { View, Text, StyleSheet, Image, FlatList, ImageBackground } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import Button from '@/mycomponents/button';
 import { useRouter } from 'expo-router';
 
+import { useEffect, useState } from 'react';
+import { usePetsDB } from '@/DataBase/db/usePetsDB';
+
+import { Pet } from "@/DataBase/Models/Models";
+
+
+
 const telalistagem = () => {
-    const { nomePet, imagePet } = useLocalSearchParams();
+    const { getAllPets } = usePetsDB();
+    
+    const [pets, setPets] = useState<Pet[]>([]);
+    const router = useRouter();
+    
+    async function list() {
+        const res = await getAllPets();
+        setPets(res);
+        console.log(res)
+    }
 
-    const pets = [
-        { id: '1', nome: nomePet, imagem: imagePet }
-    ];
+    useEffect(() => {
+        list(); // Chama a função para buscar os pets quando o componente é montado
+    }, []);
 
-    const handleSelectPet = () => {
-        router.push("/(tabs)/teladetalhe")
+    const handleSelectPet = (petId: number) => {
+        router.push({
+            pathname: "/(tabs)/teladetalhe",
+            params: { petId } //para navegar até a tela de detalhes com  o id do pet
+        });
 
     }
 
     return (
         <ImageBackground
-            source={require('../../assets/images/fundoInicial.jpg')}
-            style={styles.background}>
+        source={require('../../assets/images/fundoInicial.jpg')}
+        style={styles.background}>
             <View style={styles.container}>
                 <Text style={styles.title}>Lista de Pets</Text>
                 <FlatList
                     data={pets}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => String(item.id)}
                     renderItem={({ item }) => (
                         <View style={styles.petContainer}>
                             <Image
                                 source={
-                                    item.imagem === 'pet1'
-                                        ? require('../../assets/images/spritesDinoMove/DinoSpritesAmarelo.gif')
-                                        : item.imagem === 'pet2'
-                                            ? require('../../assets/images/spritesDinoMove/DinoSpritesAzul.gif')
-                                            : item.imagem === 'pet3'
-                                                ? require('../../assets/images/spritesDinoMove/DinoSpritesVerde.gif')
-                                                : require('../../assets/images/spritesDinoMove/DinoSpritesVermelho.gif')
+                                    item.Tipo_Cor === 'pet1'
+                                    ? require('../../assets/images/spritesDinoMove/DinoSpritesAmarelo.gif')
+                                    : item.Tipo_Cor === 'pet2'
+                                    ? require('../../assets/images/spritesDinoMove/DinoSpritesAzul.gif')
+                                    : item.Tipo_Cor === 'pet3'
+                                    ? require('../../assets/images/spritesDinoMove/DinoSpritesVerde.gif')
+                                    : require('../../assets/images/spritesDinoMove/DinoSpritesVermelho.gif')
                                 }
                                 style={styles.petImage}
                             />
-                            <Text style={styles.petName}>{item.nome}</Text>
-                            <Button titleButton='Selecionar' onPress={handleSelectPet}></Button>
+                            <Text style={styles.petName}>{item.Nome}</Text>
+                            <Button titleButton='Selecionar' onPress={() => handleSelectPet(item.id)}></Button>
                         </View>
                     )}
                 />

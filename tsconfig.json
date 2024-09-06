@@ -1,18 +1,15 @@
+//VERSÃO DPS DE IMPLEMENTAR O SQLITE
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "jsx": "react-native",
-    "lib": ["esnext"],
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "ES6", // Define a versão ECMAScript alvo para ES6, ajustável conforme necessidade
+    "module": "commonjs", // Usa o sistema de módulos CommonJS, que é comum em Node.js
+    "esModuleInterop": true, // Facilita a interoperabilidade com módulos CommonJS
+    "skipLibCheck": true, // Ignora a verificação de tipos em bibliotecas, pode acelerar a compilação
+    "forceConsistentCasingInFileNames": true, // Garante consistência na capitalização de nomes de arquivos
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"] // Configura aliases para importações, ajustável conforme sua estrutura de projeto
     }
   },
   "include": [
@@ -22,6 +19,33 @@
     "expo-env.d.ts"
   ]
 }
+
+
+//  ESTE ERA A SEGUNDA VERSÃO - DEIXANDO AQUI CASO DÊ RUIM NA PROXIMA
+//{
+//  "extends": "expo/tsconfig.base",
+//  "compilerOptions": {
+//    "strict": true,
+//    "jsx": "react-native",
+//    "lib": ["esnext"],
+//    "moduleResolution": "node",
+//    "allowSyntheticDefaultImports": true,
+//    "esModuleInterop": true,
+//    "skipLibCheck": true,
+//    "forceConsistentCasingInFileNames": true,
+//    "paths": {
+//      "@/*": [
+//        "./*"
+//      ]
+//    }
+//  },
+//  "include": [
+//    "**/*.ts",
+//    "**/*.tsx",
+//    ".expo/types/**/*.ts",
+//    "expo-env.d.ts"
+//  ]
+//}
 
 
 // --------  Este abaixo era o original, está comentado caso tenhamos algum problema com o que foi alterado

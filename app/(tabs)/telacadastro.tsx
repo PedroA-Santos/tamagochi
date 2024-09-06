@@ -1,82 +1,54 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { View, StyleSheet, Button, Text, TextInput } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-
-export default function telacadastro() {
-    const [petName, setPetName] = useState('');
-    const [selectedPet, setSelectedPet] = useState('dog');
-
-    const handleConfirm = () => {
-        console.log(`Nome do bichinho: ${petName} Tipo do Bichinho: ${selectedPet}`);
-    };
-
-    return (
-        <View style={styles.container}>
-            <Text style={styles.label}>Nome do Bichinho:</Text>
-            <TextInput
-                style={styles.input}
-                placeholder='Digite o nome do Bichinho'
-                value={petName}
-                onChangeText={setPetName}
-            />
-
-            <Text style={styles.label}>Selecione o tipo do Bichinho:</Text>
-            <RNPickerSelect
-                onValueChange={(value) => setSelectedPet(value)}
-                items={[
-                    { label: 'Cachorro', value: 'dog' },
-                    { label: 'Gato', value: 'cat' },
-                    { label: 'Pássaro', value: 'bird' },
-                ]}
-            />
-
-            <Button title='Confirmar' onPress={handleConfirm} />
-        </View>
-=======
 import { View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import Header from '@/mycomponents/header';
 import Button from '@/mycomponents/button';
 import { useState, useRef } from 'react';
 import { useRouter } from 'expo-router';
 
+//importando a funções de consultas da base de dados
+import { usePetsDB } from '@/DataBase/db/usePetsDB';
+
 const telacadastro = () => {
-    const [inputNomePet, setInputNomePet] = useState<string>("");
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [nome, setNome] = useState<string>("");
+    const [tipo_cor, setTipo_cor] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const router = useRouter();
-    const inputPetRef = useRef<TextInput>(null)
+    const inputPetRef = useRef<TextInput>(null);
 
-    const handleNomePet = (text: string) => {
-        setInputNomePet(text);
-    };
+    const { addPet } = usePetsDB();
 
-    const handleSelectImage = (image: string) => {
-        setSelectedImage(image);
-    };
+    const create = async () => {
+        if (nome && tipo_cor) {
+        try {
+            const res = await addPet({ nome, tipo_cor })
+            console.log(res);
 
-    const handleConfirm = () => {
-        if (inputNomePet && selectedImage) {
+            //parte mantida pra redirecionar apóes o cadastro
             router.push({
                 pathname: "/(tabs)/telalistagem",
-                params: { nomePet: inputNomePet, imagePet: selectedImage },
+                params: {nome}
             });
 
-            setInputNomePet("");
-            setSelectedImage("");
-            setErrorMessage(null)
-        } else if (!inputNomePet && !selectedImage) {
-            setErrorMessage("Preencha os campos Nome e Imagem do Pet")
-            inputPetRef.current?.focus()
-        }else if (!inputNomePet) {
-            setErrorMessage("Preencha o Nome do pet")
-            inputPetRef.current?.focus()
-        }else if (!selectedImage){
-            setErrorMessage("Selecione a Imagem do seu Pet")
+        } catch (error) {
+            
+        }
+        
+            
+        } else {
+            setErrorMessage("Preencha corretamente os campos Nome e Imagem do Pet")
             inputPetRef.current?.focus()
         }
 
+
+        setNome("");
+        setTipo_cor("");
+        setErrorMessage(null);
+    }
+
+
+    const handleSelectImage = (image: string) => {
+        setTipo_cor(image);
     };
+
 
     return (
 
@@ -90,8 +62,8 @@ const telacadastro = () => {
                     <Text style={styles.titulo}>Nome do seu Pet:</Text>
                     <TextInput
                         style={styles.inputNomePet}
-                        value={inputNomePet}
-                        onChangeText={handleNomePet}
+                        value={nome}
+                        onChangeText={setNome}
                         placeholder='Insira o nome do seu Pet'
                         maxLength={50}
 
@@ -105,7 +77,7 @@ const telacadastro = () => {
                                 source={require('../../assets/images/spritesDinoMove/DinoSpritesAmarelo.gif')}
                                 style={[
                                     styles.petImage,
-                                    selectedImage === 'pet1' && styles.selectedImage,
+                                    tipo_cor === 'pet1' && styles.selectedImage,
                                 ]}
                             />
                         </TouchableOpacity>
@@ -114,7 +86,7 @@ const telacadastro = () => {
                                 source={require('../../assets/images/spritesDinoMove/DinoSpritesAzul.gif')}
                                 style={[
                                     styles.petImage,
-                                    selectedImage === 'pet2' && styles.selectedImage,
+                                    tipo_cor === 'pet2' && styles.selectedImage,
                                 ]}
                             />
                         </TouchableOpacity>
@@ -123,7 +95,7 @@ const telacadastro = () => {
                                 source={require('../../assets/images/spritesDinoMove/DinoSpritesVerde.gif')}
                                 style={[
                                     styles.petImage,
-                                    selectedImage === 'pet3' && styles.selectedImage,
+                                    tipo_cor === 'pet3' && styles.selectedImage,
                                 ]}
                             />
                         </TouchableOpacity>
@@ -132,58 +104,29 @@ const telacadastro = () => {
                                 source={require('../../assets/images/spritesDinoMove/DinoSpritesVermelho.gif')}
                                 style={[
                                     styles.petImage,
-                                    selectedImage === 'pet4' && styles.selectedImage,
+                                    tipo_cor === 'pet4' && styles.selectedImage,
                                 ]}
                             />
                         </TouchableOpacity>
                     </View>
 
-                    {inputNomePet && (
+                    {nome && (
                         <Text style={styles.selectedImageText}>
-                            O nome do seu Pet sera: {inputNomePet}
+                            O nome do seu Pet sera: {nome}
 
                         </Text>
                     )}{errorMessage && (
                         <Text style={styles.errors}>{errorMessage}</Text> 
                     )}
 
-                    <Button titleButton='confirmar' onPress={handleConfirm} />
+                    <Button titleButton='confirmar' onPress={create} />
                 </View>
             </ScrollView>
         </ImageBackground>
 
->>>>>>> 3755ff91e2bd9c53b744e64e7fae986f6d1443fe
     );
 };
 
-<<<<<<< HEAD
-const styles = StyleSheet.create({
-    picker: {
-        height: 50,
-        width: '100%',
-        marginBottom: 20,
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-    },
-    label: {
-        fontSize: 18,
-        marginBottom: 10,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        marginBottom: 20,
-        borderRadius: 5,
-    },
-});
-
-
-  
-=======
 export default telacadastro;
 
 
@@ -265,4 +208,3 @@ const styles = StyleSheet.create({
     }
    
 });
->>>>>>> 3755ff91e2bd9c53b744e64e7fae986f6d1443fe

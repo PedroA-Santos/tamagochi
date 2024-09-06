@@ -26,10 +26,7 @@ export default function TabsLayout() {
           headerShown: false
         }}
       />
-      <Tabs.Screen
-        name="teladetalhe"
-        options={{ title: 'Tela de Detalhes' }}
-      />
+      
       <Tabs.Screen
         name="telajogos"
         options={{
