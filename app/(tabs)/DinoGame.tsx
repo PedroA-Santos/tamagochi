@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, Text, Image, TouchableWithoutFeedback, Easi
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import dinoSprite from '../../assets/images/sprites/azul/moveRS.gif';
-import index from ".";
+
 
 const DinoGame = () => {
     const [isJumping, setIsJumping] = useState(false); //status de pulo

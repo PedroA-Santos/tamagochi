@@ -25,13 +25,10 @@ export default function TabsLayout() {
           tabBarLabel: 'Listagem',
           headerShown: false
         }}
-<<<<<<< HEAD
       />
       <Tabs.Screen
         name="teladetalhe"
         options={{ title: 'Tela de Detalhes' }}
-=======
->>>>>>> 3755ff91e2bd9c53b744e64e7fae986f6d1443fe
       />
       <Tabs.Screen
         name="telajogos"
@@ -44,11 +41,11 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-<<<<<<< HEAD
         name="DinoGame"
         options={{ title: 'DinoGame', tabBarStyle: { display: 'none' } }} //para esconder o tabs na tela do jogo
       />
-=======
+      
+      <Tabs.Screen
         name="teladetalhe"
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -59,7 +56,6 @@ export default function TabsLayout() {
         }}
       />
 
->>>>>>> 3755ff91e2bd9c53b744e64e7fae986f6d1443fe
     </Tabs>
   );
 }

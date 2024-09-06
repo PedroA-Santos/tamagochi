@@ -22,17 +22,9 @@ export default function RootLayout() {
   }
 
   return (
-<<<<<<< HEAD
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
-=======
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
->>>>>>> 3755ff91e2bd9c53b744e64e7fae986f6d1443fe
   );
 }
