@@ -1,10 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, Animated } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import Header from "../../mycomponents/header";
+import Header from "@/mycomponents/header";
+import { usePetsDB } from '@/DataBase/db/usePetsDB';
+import { Pet } from "@/DataBase/Models/Models";
 
 const Teladetalhe = () => {
-    const { nomePet, imagePet } = useLocalSearchParams();
+    const { nomePet, imagePet, petId } = useLocalSearchParams();
+    const { getAllPets } = usePetsDB();
 
     // Configurando animação de escala para cada botão
     const scaleAnim1 = useRef(new Animated.Value(1)).current;
@@ -15,6 +18,8 @@ const Teladetalhe = () => {
     const [sleep, setSleep] = useState(80); // Valor de 0 a 100
     const [hunger, setHunger] = useState(50); // Valor de 0 a 100
     const [fun, setFun] = useState(70); // Valor de 0 a 100
+    
+    
 
     const getBackGroundColor = () => {
         switch (imagePet) {
@@ -30,6 +35,7 @@ const Teladetalhe = () => {
                 return "#ffff";
         }
     };
+  
 
     const playGames = () => {
         router.push("/telajogos");
@@ -65,7 +71,7 @@ const Teladetalhe = () => {
 
     return (
         <ImageBackground
-            source={require('../../assets/images/fundoInicial.jpg')}
+            source={require('@/assets/images/fundoInicial.jpg')}
             style={styles.background}
         >
             <Header title='DINOGOSHI' />
@@ -77,12 +83,12 @@ const Teladetalhe = () => {
                 <Image
                     source={
                         imagePet === 'pet1'
-                            ? require('../../assets/images/spritesDinoMove/DinoSpritesAmarelo.gif')
+                            ? require('@/assets/images/spritesDinoMove/DinoSpritesAmarelo.gif')
                             : imagePet === 'pet2'
-                                ? require('../../assets/images/spritesDinoMove/DinoSpritesAzul.gif')
+                                ? require('@/assets/images/spritesDinoMove/DinoSpritesAzul.gif')
                                 : imagePet === 'pet3'
-                                    ? require('../../assets/images/spritesDinoMove/DinoSpritesVerde.gif')
-                                    : require('../../assets/images/spritesDinoMove/DinoSpritesVermelho.gif')
+                                    ? require('@/assets/images/spritesDinoMove/DinoSpritesVerde.gif')
+                                    : require('@/assets/images/spritesDinoMove/DinoSpritesVermelho.gif')
                     }
                     style={[styles.petImage, { backgroundColor: getBackGroundColor() }]}
                 />
@@ -96,7 +102,7 @@ const Teladetalhe = () => {
                         onPressOut={() => handlePressOut(scaleAnim1)}
                     >
                         <Animated.Image
-                            source={require("../../assets/images/controle-de-video-game.png")}
+                            source={require("@/assets/images/controle-de-video-game.png")}
                             style={[styles.buttonImageIcons, { transform: [{ scale: scaleAnim1 }] }]}
                         />
                     </TouchableOpacity>
@@ -106,7 +112,7 @@ const Teladetalhe = () => {
                         onPressOut={() => handlePressOut(scaleAnim2)}
                     >
                         <Animated.Image
-                            source={require("../../assets/images/pizza.png")}
+                            source={require("@/assets/images/pizza.png")}
                             style={[styles.buttonImageIcons, { transform: [{ scale: scaleAnim2 }] }]}
                         />
                     </TouchableOpacity>
@@ -116,7 +122,7 @@ const Teladetalhe = () => {
                         onPressOut={() => handlePressOut(scaleAnim3)}
                     >
                         <Animated.Image
-                            source={require("../../assets/images/lua-e-estrelas.png")}
+                            source={require("@/assets/images/lua-e-estrelas.png")}
                             style={[styles.buttonImageIcons, { transform: [{ scale: scaleAnim3 }] }]}
                         />
                     </TouchableOpacity>

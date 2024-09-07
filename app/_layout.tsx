@@ -35,9 +35,10 @@ export default function RootLayout() {
 
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
-        <Stack.Screen name='telajogos' options={{headerShown:false}} />
-        <Stack.Screen name='DinoGame' options={{headerShown:false}} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name='telajogos' options={{ headerShown: false }} />
+        <Stack.Screen name='DinoGame' options={{ headerShown: false }} />
+        <Stack.Screen name="teladetalhe" options={{ headerShown: false }} />
       </Stack>
     </SQLiteProvider>
 

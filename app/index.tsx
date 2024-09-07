@@ -1,9 +1,30 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import Header from '@/mycomponents/header';
+import { useEffect } from 'react';
+import { usePetsDB } from '@/DataBase/db/usePetsDB';
 
 const Index = () => {
   const router = useRouter();
+  const { getAllPets } = usePetsDB();
+
+  
+    const checkExistPets = async () => {
+      try {
+        const pets = await getAllPets()
+        if (pets.length === 0) {
+          router.push("/(tabs)/telacadastro")
+        } else if (pets.length > 0) {
+          router.push("/(tabs)/telalistagem")
+          
+        }
+
+      } catch (error) {
+        console.log("Erro ao verificar pets");
+
+      }
+    }
+  
 
   return (
     <ImageBackground
@@ -19,8 +40,8 @@ const Index = () => {
         />
         <TouchableOpacity
           style={styles.buttonPlay}
-          onPress={() => router.push('/(tabs)/telacadastro')}
-          
+          onPress={(checkExistPets)}
+
         >
           <Text style={styles.buttonText}>Jogar</Text>
         </TouchableOpacity>
