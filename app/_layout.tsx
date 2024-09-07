@@ -29,11 +29,14 @@ export default function RootLayout() {
   }
 
   return (
+
     <SQLiteProvider databaseName='Pets.db' onInit={initDatabase}>
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
     </SQLiteProvider>
+
   );
 }
