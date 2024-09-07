@@ -3,6 +3,7 @@ import { View, StyleSheet, Animated, Text, Image, TouchableWithoutFeedback, Easi
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import dinoSprite from '../../assets/images/sprites/azul/moveRS.gif';
+import { useRouter } from "expo-router";
 
 
 const DinoGame = () => {
@@ -266,10 +267,10 @@ const styles = StyleSheet.create({
         transform: [{ translateX: -50 }],
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor:"#fff9",
-        borderWidth:4,
-        borderColor:"#000",
-        borderRadius:5
+        backgroundColor: "#fff9",
+        borderWidth: 4,
+        borderColor: "#000",
+        borderRadius: 5
     },
     score: {
         position: 'absolute',
