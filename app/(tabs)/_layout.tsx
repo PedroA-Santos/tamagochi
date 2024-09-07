@@ -26,7 +26,17 @@ export default function TabsLayout() {
           headerShown: false
         }}
       />
-
+      
+      <Tabs.Screen
+        name="telajogos"
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="play-outline" color={color} size={size} />
+          ),
+          tabBarLabel: 'Jogos',
+          headerShown: false
+        }}
+      />
       <Tabs.Screen
         name="teladetalhe"
         options={{

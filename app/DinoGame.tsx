@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Text, Image, TouchableWithoutFeedback, Easing, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import dinoSprite from '../assets/images/sprites/azul/moveRS.gif';
-import { useRouter } from 'expo-router';
+import dinoSprite from '../../assets/images/sprites/azul/moveRS.gif';
 
 
 const DinoGame = () => {
