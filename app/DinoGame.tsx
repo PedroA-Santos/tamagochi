@@ -2,19 +2,22 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Text, Image, TouchableWithoutFeedback, Easing, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import dinoSprite from '../../assets/images/sprites/azul/moveRS.gif';
-import index from ".";
+import dinoSprite from '../assets/images/sprites/azul/moveRS.gif';
+import { useRouter } from 'expo-router';
+
 
 const DinoGame = () => {
     const [isJumping, setIsJumping] = useState(false); //status de pulo
     const [obstaclePosition, setObstaclePosition] = useState(new Animated.Value(-50)); //obstáculo
-    const jumpHeight = useRef(new Animated.Value(0)).current; 
-    const [gameOver, setGameOver] = useState(true); 
+    const jumpHeight = useRef(new Animated.Value(0)).current;
+    const [gameOver, setGameOver] = useState(true);
     const [currentJumpHeight, setCurrentJumpHeight] = useState(0);
     const [score, setScore] = useState(0);
 
-    const floor = require('../../assets/images/sprites/BackgroundLayers/Layer_0001_8.png'); // imagem do piso
-    const obstacleImage = require('../../assets/images/sprites/Cactus/tile000.png') //imagem do obstaculo
+
+    const floor = require('../assets/images/sprites/BackgroundLayers/Layer_0001_8.png'); // imagem do piso
+    const obstacleImage = require('../assets/images/sprites/Cactus/tile000.png') //imagem do obstaculo
+    const router = useRouter()
 
 
     //função de reset do jogo ----
@@ -27,18 +30,22 @@ const DinoGame = () => {
         setScore(0);
     };
 
-    const exitGame = () => {
-       // navigation.navigate('Home')
-    }
+    const exitGame = async () => {
+        // Desbloqueia a orientação da tela ao sair do jogo
+        await ScreenOrientation.unlockAsync();
+
+        // Navega de volta para a tela de detalhes
+        router.push('/(tabs)/teladetalhe');
+    };
 
     //função de pontos do jogo ------
     useEffect(() => {
-        if(!gameOver) {
+        if (!gameOver) {
             const interval = setInterval(() => {
                 setScore(prevScore => prevScore + 1);
             }, 50) //define o tempo pra subir os pontos
 
-            return() => clearInterval(interval);
+            return () => clearInterval(interval);
         }
     }, [gameOver]);
 
@@ -62,13 +69,13 @@ const DinoGame = () => {
             ]).start(() => {
                 setIsJumping(false);
             });
-    
+
             // Atualizar a altura do pulo com listener
             const listenerId = jumpHeight.addListener(({ value }) => {
                 //console.log(`Jump Height: ${value}`); // Log para verificar o valor
                 setCurrentJumpHeight(value);
             });
-    
+
             return () => {
                 jumpHeight.removeListener(listenerId);
             }
@@ -82,13 +89,13 @@ const DinoGame = () => {
         }
     }, [gameOver]);
 
-    
+
 
     //Animação obstaculos ------
     const currentJumpHeightRef = useRef(currentJumpHeight); //referência para não bugar o moveObstacle
 
     useEffect(() => { //Funçao que atualiza o currentJump  sempre que ele mudar
-        currentJumpHeightRef.current = currentJumpHeight;        
+        currentJumpHeightRef.current = currentJumpHeight;
     }, [currentJumpHeight]);
 
     //finalmente a funçao que anima os obstaculos
@@ -100,7 +107,7 @@ const DinoGame = () => {
                 easing: Easing.linear,
                 useNativeDriver: true,
             });
-            
+
             animation.start(({ finished }) => {
                 if (!gameOver && finished) {
                     obstaclePosition.setValue(1000);
@@ -112,27 +119,27 @@ const DinoGame = () => {
                 animation.stop();
             }
         };
-    
+
         // Adicionar listener para colisão
         const listenerId = obstaclePosition.addListener(({ value }) => {
             checkCollision(value, currentJumpHeightRef.current);
         });
-    
+
         moveObstacle();
-    
+
         return () => {
             obstaclePosition.removeAllListeners(); // Remove todos os listeners
         };
     }, [obstaclePosition, gameOver]);
-    
-    
 
-    
+
+
+
 
     //função para veririficar a colisão --------
     const checkCollision = (obstacleLeft: number, currentJumpHeight: number) => {
         const dinoWidth = 40;
-        const dinoHeight = 70; 
+        const dinoHeight = 70;
         const dinoLeft = 230;
         const dinoRight = dinoLeft + 40;
         const dinoBottom = 28 + currentJumpHeight;
@@ -146,9 +153,9 @@ const DinoGame = () => {
         const obstacleTop = 22 + 50; //posição 'bottom' + altura
 
         //console.log(`Dino: ${dinoBottom}-${dinoTop}`);
-       
 
-        if(
+
+        if (
             dinoRight > obstacleLeft &&
             dinoLeft < obstacleRight &&
             dinoBottom < obstacleTop &&
@@ -159,7 +166,7 @@ const DinoGame = () => {
             //alert("Game Over!");
             console.log(`Game Over! ${dinoBottom}-${dinoTop}`);
         }
-        
+
     };
 
     //Animação do piso ----
@@ -167,14 +174,14 @@ const DinoGame = () => {
 
     useEffect(() => {
         const animatedFloor = () => {
-          Animated.loop(
-            Animated.timing(floorPosition, {
-              toValue: -898, // Ajuste o valor conforme necessário
-              duration: 2500,
-              easing: Easing.linear,
-              useNativeDriver: true,
-            })
-          ).start();
+            Animated.loop(
+                Animated.timing(floorPosition, {
+                    toValue: -898, // Ajuste o valor conforme necessário
+                    duration: 2500,
+                    easing: Easing.linear,
+                    useNativeDriver: true,
+                })
+            ).start();
         };
         animatedFloor();
     }, [floorPosition]);
@@ -193,22 +200,22 @@ const DinoGame = () => {
             <LinearGradient colors={['#FFA500', '#FFDAB9']} style={styles.container}>
                 <Text style={styles.score}>Score: {score}</Text>
                 <Animated.Image source={floor} resizeMode={'cover'} style={[styles.floor, { transform: [{ translateX: floorPosition }] }]} />
-                <Animated.View style={[styles.dinoHitbox, { transform: [{ translateY: jumpHeight}] }]} />
+                <Animated.View style={[styles.dinoHitbox, { transform: [{ translateY: jumpHeight }] }]} />
                 <Animated.View style={[styles.dino, { transform: [{ translateY: jumpHeight }] }]}>
                     <Image source={dinoSprite} style={styles.dinoImage} resizeMode="contain" />
                 </Animated.View>
                 <Animated.Image source={obstacleImage} style={[styles.cacto, { transform: [{ translateX: obstaclePosition }] }]} />
-                { gameOver && (
-                <View style={styles.buttonContainer}>
-                    <Button title="(Re)Iniciar" onPress={resetGame} />
-                    <Button title="Sair" onPress={exitGame} />
-                </View> )}
+                {gameOver && (
+                    <View style={styles.buttonContainer}>
+                        <Button title="(Re)Iniciar" onPress={resetGame} />
+                        <Button title="Sair" onPress={exitGame} />
+                    </View>)}
             </LinearGradient>
         </TouchableWithoutFeedback>
     );
 };
 
-const styles =  StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-end',
@@ -247,7 +254,7 @@ const styles =  StyleSheet.create({
         height: 100,
     },
     floor: {
-        width: '205%' ,
+        width: '205%',
         height: 700,
         position: "absolute",
         bottom: 0,
@@ -257,9 +264,13 @@ const styles =  StyleSheet.create({
         position: 'absolute',
         top: 50,
         left: '50%',
-        transform: [{translateX: -50}],
+        transform: [{ translateX: -50 }],
         flexDirection: 'row',
         justifyContent: 'space-between',
+        backgroundColor:"#fff9",
+        borderWidth:4,
+        borderColor:"#000",
+        borderRadius:5
     },
     score: {
         position: 'absolute',

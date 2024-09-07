@@ -1,3 +1,6 @@
+
+//*IMPORTES UTILIZADOS
+
 import { View, Text, StyleSheet, ImageBackground, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import Header from '@/mycomponents/header';
 import Button from '@/mycomponents/button';
@@ -5,19 +8,25 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'expo-router';
 
 const telacadastro = () => {
+    //*CONTROLE DE ESTADOS NOMEPET,IMAGEMPET,MENSAGEM DE ERRO*//
     const [inputNomePet, setInputNomePet] = useState<string>("");
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const router = useRouter();
     const inputPetRef = useRef<TextInput>(null)
 
+    //* LIDANDO COM O NOME DO PET INSERIDO
     const handleNomePet = (text: string) => {
         setInputNomePet(text);
     };
-
+    //* LIDANDO COM  A IMAGEM DO PET SELECIONADA
     const handleSelectImage = (image: string) => {
         setSelectedImage(image);
     };
+
+
+    /**FUNÇÃO PARA CONFIRMAR A SELEÇÃO DO NOME E IMAGEM DO PET E SER REDIRECIONADO PARA A TELA DE LISTAGEM */
+    //* ELA LIMPA OS INPUTS E TRATA OS INPUTS*/
 
     const handleConfirm = () => {
         if (inputNomePet && selectedImage) {
@@ -32,10 +41,10 @@ const telacadastro = () => {
         } else if (!inputNomePet && !selectedImage) {
             setErrorMessage("Preencha os campos Nome e Imagem do Pet")
             inputPetRef.current?.focus()
-        }else if (!inputNomePet) {
+        } else if (!inputNomePet) {
             setErrorMessage("Preencha o Nome do pet")
             inputPetRef.current?.focus()
-        }else if (!selectedImage){
+        } else if (!selectedImage) {
             setErrorMessage("Selecione a Imagem do seu Pet")
             inputPetRef.current?.focus()
         }
@@ -44,11 +53,13 @@ const telacadastro = () => {
 
     return (
 
+        //* IMAGEM DE FUNDO
         <ImageBackground
             source={require('../../assets/images/fundoInicial.jpg')}
             style={styles.background}
         >
             <ScrollView>
+                {/**INSERÇÃO DO NOME DO PET */}
                 <View style={styles.container}>
                     <Header title='DINOGOSHI' />
                     <Text style={styles.titulo}>Nome do seu Pet:</Text>
@@ -61,7 +72,7 @@ const telacadastro = () => {
 
                     />
 
-
+                    {/*SELECIONANDO A IMAGEM DO PET */}
                     <Text style={styles.texto}>Selecione a imagem do seu Pet:</Text>
                     <View style={styles.imageContainer}>
                         <TouchableOpacity onPress={() => handleSelectImage('pet1')}>
@@ -101,16 +112,17 @@ const telacadastro = () => {
                             />
                         </TouchableOpacity>
                     </View>
-
+                    {/**MOSTRANDO O NOME DO PET INSERIDO */}
                     {inputNomePet && (
                         <Text style={styles.selectedImageText}>
                             O nome do seu Pet sera: {inputNomePet}
 
                         </Text>
+                        /**MENSAGEM DE ERRO CASO OS INPUTS NÃO SEJAM PREENCHIDOS */
                     )}{errorMessage && (
-                        <Text style={styles.errors}>{errorMessage}</Text> 
+                        <Text style={styles.errors}>{errorMessage}</Text>
                     )}
-
+                    {/**BOTÃO DE CONFIRMAÇÃO */}
                     <Button titleButton='confirmar' onPress={handleConfirm} />
                 </View>
             </ScrollView>
@@ -138,7 +150,7 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 18,
         fontFamily: "Daydream",
-        color: "#000",
+        color: "#ffff",
         marginTop: 15,
 
     },
@@ -146,7 +158,7 @@ const styles = StyleSheet.create({
         fontFamily: "Daydream",
         fontSize: 12,
         marginTop: 30,
-        color: "#0d0"
+        color: "#fff"
     },
     inputNomePet: {
         backgroundColor: "#36843F",
@@ -177,7 +189,9 @@ const styles = StyleSheet.create({
         height: 130,
         margin: 10,
         borderRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        backgroundColor: "#fff9",
+        borderWidth: 4,
+        borderColor: "#000"
     },
     selectedImage: {
         borderColor: '#fa0505',
@@ -191,12 +205,12 @@ const styles = StyleSheet.create({
 
 
     },
-    errors:{
-        color:"#fa0505",
-        fontSize:18,
-        fontWeight:"bold",
-        textDecorationLine:"underline",
-        padding:8
+    errors: {
+        color: "#fa0505",
+        fontSize: 18,
+        fontWeight: "bold",
+        textDecorationLine: "underline",
+        padding: 8
     }
-   
+
 });
