@@ -26,6 +26,8 @@ const telalistagem = () => {
         list(); // Chama a função para buscar os pets quando o componente é montado
     }, []);
 
+
+
     const handleSelectPet = (petId: number) => {
         router.push({
             pathname: "/(tabs)/teladetalhe",

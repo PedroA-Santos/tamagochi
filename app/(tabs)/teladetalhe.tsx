@@ -4,12 +4,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import Header from "../../mycomponents/header";
 
 const Teladetalhe = () => {
-    const { nomePet, imagePet } = useLocalSearchParams();
+    const { nomePet, imagePet, petId } = useLocalSearchParams();
 
     // Configurando animação de escala para cada botão
     const scaleAnim1 = useRef(new Animated.Value(1)).current;
     const scaleAnim2 = useRef(new Animated.Value(1)).current;
     const scaleAnim3 = useRef(new Animated.Value(1)).current;
+
+    
 
     // Estados para controlar os valores de sono, fome e diversão
     const [sleep, setSleep] = useState(80); // Valor de 0 a 100

@@ -8,6 +8,7 @@ export type Pet  = {
     Sono: number;
     Diversao: number;
     Last_uptate: string; //TIMESTAMP É PASSADO COMO STRING
+    elapsedTime: number; //não existe na tabela mas é usado na consulta updatePetStatus()
 }
 
 export type Pet_Jogo = {
