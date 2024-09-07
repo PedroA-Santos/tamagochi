@@ -32,7 +32,6 @@ export default function RootLayout() {
   return (
 
     <SQLiteProvider databaseName='Pets.db' onInit={initDatabase}>
-
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
@@ -40,6 +39,5 @@ export default function RootLayout() {
         <Stack.Screen name='DinoGame' options={{headerShown:false}} />
       </Stack>
     </SQLiteProvider>
-
   );
 }

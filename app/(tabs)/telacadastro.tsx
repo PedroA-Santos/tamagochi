@@ -19,31 +19,32 @@ const telacadastro = () => {
 
     const create = async () => {
         if (nome && tipo_cor) {
-        try {
-            const res = await addPet({ nome, tipo_cor })
-            console.log(res);
+            try {
+                const res = await addPet({ nome, tipo_cor });
+                console.log(res);
 
-            //parte mantida pra redirecionar apóes o cadastro
-            router.push({
-                pathname: "/(tabs)/telalistagem",
-                params: {nome}
-            });
+                // Redirecionar após o cadastro
+                router.push({
+                    pathname: "/(tabs)/telalistagem",
+                    params: { nome }
+                });
 
-        } catch (error) {
-            
-        }
-        
-            
+                // Resetar campos após o sucesso
+                setNome("");
+                setTipo_cor("");
+                setErrorMessage(null);
+
+            } catch (error) {
+                console.error("Erro ao cadastrar o pet:", error);
+                setErrorMessage("Ocorreu um erro ao cadastrar seu pet. Tente novamente.");
+            }
         } else {
-            setErrorMessage("Preencha corretamente os campos Nome e Imagem do Pet")
-            inputPetRef.current?.focus()
+            if (!nome || !tipo_cor) {
+                setErrorMessage("Preencha corretamente os campos Nome e Imagem do Pet");
+                inputPetRef.current?.focus();
+            }
         }
-
-
-        setNome("");
-        setTipo_cor("");
-        setErrorMessage(null);
-    }
+    };
 
 
     const handleSelectImage = (image: string) => {
