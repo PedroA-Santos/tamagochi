@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Text, Image, TouchableWithoutFeedback, Easing, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import dinoSprite from '../../assets/images/sprites/azul/moveRS.gif';
+import dinoSprite from '@/assets/images/sprites/azul/moveRS.gif';
 import { useRouter } from "expo-router";
 
 
@@ -15,8 +15,8 @@ const DinoGame = () => {
     const [score, setScore] = useState(0);
 
 
-    const floor = require('../assets/images/sprites/BackgroundLayers/Layer_0001_8.png'); // imagem do piso
-    const obstacleImage = require('../assets/images/sprites/Cactus/tile000.png') //imagem do obstaculo
+    const floor = require('@/assets/images/sprites/BackgroundLayers/Layer_0001_8.png'); // imagem do piso
+    const obstacleImage = require('@/assets/images/sprites/Cactus/tile000.png') //imagem do obstaculo
     const router = useRouter()
 
 

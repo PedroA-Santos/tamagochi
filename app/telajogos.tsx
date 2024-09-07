@@ -1,74 +1,91 @@
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
-import { useRouter } from 'expo-router';
-import Header from '@/mycomponents/header';
+import { View, Text, StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
+import Button from '@/mycomponents/button';
+import { useRouter, Href } from 'expo-router';
+
+type Game = { //tipando o game para não ter problemas para usar o flat list
+    id: string;
+    name: string;
+    //imagem: any;
+    route: Href;
+};
+
+const games: Game[] = [ //aparentemente, se define o tipo com ': Game[]' inserindo o tipo dessa maneira
+    {
+        id: '1',
+        name: 'Jogo do Dino',
+        //image: require() // ---------- Talvez por uma imagem aqui
+        route: '/DinoGame',
+    },
+    {
+        id: '2',
+        name: "Indefinido ainda '~' ",
+        //image: require() 
+        route: '/',
+    },
+];
 
 const telajogos = () => {
     const router = useRouter();
 
-    const goToDinoGame = () => {
-        router.push("/DinoGame")
-    }
+    const renderItem = ({ item }: { item: Game }) => ( //aqui tem que tipar dnv com ': { item: Game }' para que não tenha problemas
+        <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={() => router.push(item.route)}
+            >
+                <Text style={styles.gameName}>{item.name}</Text>
+        </TouchableOpacity>
+    );
+
     return (
         <ImageBackground
-            source={require("../assets/images/fundoInicial.jpg")}
-            style={styles.background}
-        >
-            <Header title='DINOGOSHI'></Header>
-            <Text style={styles.titulo}>Selecione o Jogo :</Text>
+            source={require('@/assets/images/fundoInicial.jpg')}
+            style={styles.background}>
             <View style={styles.container}>
-
-                <View style={styles.selectGameContainer}>
-                    <TouchableOpacity
-                        style={styles.containerGame}
-                        onPress={goToDinoGame}>
-                        <Text style={styles.textGameContainer}>Jogo do Dino</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={styles.title}>Lista de Jogos</Text>
+                <FlatList
+                    data={games}// Busca o vetor 'games' que criei com as informações dos jogos
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                />
             </View>
-
         </ImageBackground>
     );
-}
-
-export default telajogos;
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        padding: 20,
     },
     background: {
         flex: 1,
-        resizeMode: 'cover',
+        resizeMode: "cover"
     },
-    titulo: {
-        fontSize: 18,
-        fontFamily: "Daydream",
-        color: "#ffff",
-        marginTop: 15,
-        marginLeft: 65
-
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
     },
-    selectGameContainer: {
-        top: -330,
-        justifyContent: "center",
-        flexDirection: "column"
-
-    }, containerGame: {
-        backgroundColor: "#36843F",
-        width: 350,
-        height: 80,
-        alignItems: "center",
-        justifyContent: "center",
+    itemContainer: {
+        flexDirection: 'row',
+        padding: 16,
+        marginBottom: 20,
+        backgroundColor: "#000",
+        borderRadius: 10,
         borderWidth: 4,
-        borderColor: "#000",
-        borderRadius: 10
+        borderColor: "#36843F",
     },
-    textGameContainer: {
-        color: "#ffff",
-        fontFamily: "Daydream",
-        justifyContent: "center"
+    petImage: {
+        width: 100,
+        height: 100,
+        marginRight: 20,
+    },
+    gameName: {
+        fontSize: 18,
+        color: "#Ffff",
+        fontWeight: "bold",
+    },
+});
 
-    }
-})
+
+export default telajogos;
