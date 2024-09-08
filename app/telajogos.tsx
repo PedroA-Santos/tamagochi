@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
 import Button from '@/mycomponents/button';
+import Header from '@/mycomponents/header';
 import { useRouter, Href } from 'expo-router';
 
 type Game = { //tipando o game para não ter problemas para usar o flat list
@@ -18,9 +19,9 @@ const games: Game[] = [ //aparentemente, se define o tipo com ': Game[]' inserin
     },
     {
         id: '2',
-        name: "Indefinido ainda '~' ",
+        name: "Vibra Game",
         //image: require() 
-        route: '/',
+        route: '/VibGame',
     },
 ];
 
@@ -37,9 +38,11 @@ const telajogos = () => {
     );
 
     return (
+        
         <ImageBackground
             source={require('@/assets/images/fundoInicial.jpg')}
             style={styles.background}>
+                <Header title='DINOGOSHI'></Header>
             <View style={styles.container}>
                 <Text style={styles.title}>Lista de Jogos</Text>
                 <FlatList
@@ -56,6 +59,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        justifyContent:"center",
+        alignItems:"center"
     },
     background: {
         flex: 1,
@@ -65,15 +70,20 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+        color:"#ffff",
+        fontFamily:"Daydream"
     },
     itemContainer: {
         flexDirection: 'row',
         padding: 16,
         marginBottom: 20,
-        backgroundColor: "#000",
+        backgroundColor: "#EDE7D6",
         borderRadius: 10,
         borderWidth: 4,
-        borderColor: "#36843F",
+        borderColor: "#392629",
+        width:350,
+        alignItems:"center",
+        justifyContent:"center"
     },
     petImage: {
         width: 100,
@@ -82,8 +92,11 @@ const styles = StyleSheet.create({
     },
     gameName: {
         fontSize: 18,
-        color: "#Ffff",
+        color: "#392629",
         fontWeight: "bold",
+        fontFamily:"Daydream",
+        alignItems:"center",
+        justifyContent:"center"
     },
 });
 
