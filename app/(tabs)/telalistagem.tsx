@@ -19,18 +19,19 @@ const telalistagem = () => {
     async function list() {
         const res = await getAllPets();
         setPets(res);
-        console.log(res)
+
     }
 
     useEffect(() => {
         list(); // Chama a função para buscar os pets quando o componente é montado
     }, []);
+  
 
-    const handleSelectPet = (petId: number,nomePet:string,imagePet:string) => {
+    const handleSelectPet = (petId: number, nomePet: string, imagePet: string) => {
         router.push({
             pathname: "/teladetalhe",
-            params: { petId,nomePet,imagePet } //para navegar até a tela de detalhes com  o id do pet
-            
+            params: { petId, nomePet, imagePet } //para navegar até a tela de detalhes com  o id do pet
+
         });
 
     }
@@ -41,7 +42,7 @@ const telalistagem = () => {
         <ImageBackground
             source={require('../../assets/images/fundoInicial.jpg')}
             style={styles.background}>
-                <Header title='DINOGOSHI'></Header>
+            <Header title='DINOGOSHI'></Header>
             <View style={styles.container}>
                 <Text style={styles.title}>Selecione seu Pet</Text>
                 {/*LISTA PARA A RENDERIZAÇÃO DOS PETS COM NOME, IMAGEM E BOTÃO PARA SELECIONAR */}
@@ -64,7 +65,7 @@ const telalistagem = () => {
                                 style={styles.petImage}
                             />
                             <Text style={styles.petName}>{item.Nome}</Text>
-                            <TouchableOpacity style={styles.buttonSelect} onPress={() => handleSelectPet(item.id,item.Nome,item.Tipo_Cor)}>
+                            <TouchableOpacity style={styles.buttonSelect} onPress={() => handleSelectPet(item.id, item.Nome, item.Tipo_Cor)}>
                                 <Text style={styles.buttonText}>Selecionar</Text>
                             </TouchableOpacity>
                         </View>
@@ -82,20 +83,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        justifyContent:"center",
-        flexDirection:"column",
-        alignItems:"center"
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center"
     },
     background: {
         flex: 1,
         resizeMode: "cover",
     },
     title: {
-        fontFamily:"Daydream",
-        color:"#ffff",
-        justifyContent:"center",
-        margin:18,
-      
+        fontFamily: "Daydream",
+        color: "#ffff",
+        justifyContent: "center",
+        margin: 18,
+
     },
     petContainer: {
         flexDirection: "column",
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
         borderColor: "#ffff", // Marrom Terra
         padding: 15,
         justifyContent: "center",
-        width:300
+        width: 300
     },
     petImage: {
         width: 120,
