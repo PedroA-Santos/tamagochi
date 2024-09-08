@@ -19,12 +19,11 @@ const telalistagem = () => {
     async function list() {
         const res = await getAllPets();
         setPets(res);
-        console.log(res)
     }
 
     useEffect(() => {
         list(); // Chama a função para buscar os pets quando o componente é montado
-    }, []);
+    }, [list]);
 
     const handleSelectPet = (petId: number,nomePet:string,imagePet:string) => {
         router.push({

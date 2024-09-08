@@ -35,7 +35,7 @@ const DinoGame = () => {
         await ScreenOrientation.unlockAsync();
 
         // Navega de volta para a tela de detalhes
-        router.push('/(tabs)/teladetalhe');
+        router.push('/teladetalhe');
     };
 
     //função de pontos do jogo ------

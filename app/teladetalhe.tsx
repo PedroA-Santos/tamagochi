@@ -1,12 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, Animated } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import Header from "@/mycomponents/header";
 import { usePetsDB } from '@/DataBase/db/usePetsDB';
 import { Pet } from "@/DataBase/Models/Models";
 
 const Teladetalhe = () => {
     const { nomePet, imagePet, petId } = useLocalSearchParams();
+    const { updatePetStatus, toFeed, toSleep } = usePetsDB();
+
+    const petIDNumber = Number(petId)//recuperando o parametro do ID que vem como string
 
     // Configurando animação de escala para cada botão
     const scaleAnim1 = useRef(new Animated.Value(1)).current;
@@ -16,9 +19,24 @@ const Teladetalhe = () => {
     
 
     // Estados para controlar os valores de sono, fome e diversão
-    const [sleep, setSleep] = useState(80); // Valor de 0 a 100
-    const [hunger, setHunger] = useState(50); // Valor de 0 a 100
-    const [fun, setFun] = useState(70); // Valor de 0 a 100
+    const [sleep, setSleep] = useState<number>(100); // Valor de 0 a 100
+    const [hunger, setHunger] = useState<number>(100); // Valor de 0 a 100
+    const [fun, setFun] = useState<number>(100); // Valor de 0 a 100
+
+    //Atualiza os status do pet
+    async function attPet() {
+        const res = await updatePetStatus(petIDNumber);
+
+        if(res) {
+            setSleep(res.newSleep);
+            setHunger(res.newHunger);
+            setFun(res.newFun);
+        }
+    };
+    
+    useFocusEffect(() =>{
+        attPet();
+    });
     
     
 
@@ -41,6 +59,30 @@ const Teladetalhe = () => {
     const playGames = () => {
         router.push("/telajogos");
     };
+
+
+    async function alimentar() {
+        const res = await toFeed(petIDNumber); 
+        
+        if(res){
+            setHunger(res.newHunger);
+        }
+    };
+
+    async function dormir() {
+        const result = await toSleep(petIDNumber);
+      
+        if (result) {
+            
+            // Timer para acordar o pet depois de, por exemplo, 1 minuto (60000 ms)
+            setTimeout(() => {
+            setSleep(result.newSleep);
+            updatePetStatus(petIDNumber); // Atualiza o status do pet após o sono
+          }, (1 * 60000));
+        }
+      };
+
+
 
     // Função para iniciar a animação de escala
     const handlePressIn = (anim: Animated.Value) => {
@@ -108,7 +150,7 @@ const Teladetalhe = () => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={playGames}
+                        onPress={alimentar}
                         onPressIn={() => handlePressIn(scaleAnim2)}
                         onPressOut={() => handlePressOut(scaleAnim2)}
                     >
@@ -118,7 +160,7 @@ const Teladetalhe = () => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={playGames}
+                        onPress={dormir}
                         onPressIn={() => handlePressIn(scaleAnim3)}
                         onPressOut={() => handlePressOut(scaleAnim3)}
                     >

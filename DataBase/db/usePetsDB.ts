@@ -52,34 +52,44 @@ export function usePetsDB() {
                 (strfTime(\'%S\', CURRENT_TIME))) -
                 ((strfTime(\'%H\', Last_update) * 3600) +
                 (strfTime(\'%M\', Last_update) * 60) +
-                (strfTime(\'%S\', Last_update)))) as elapsedTime
+                (strfTime(\'%S\', Last_update)))) as elapsedTime,
+                Fome, Sono, Diversao
                 FROM Pet WHERE id = ?`, [petId]);
-            
-            if (result) {
-                const pet = result as Pet;
-                console.log((pet.elapsedTime));
-                const elapsedTime = pet.elapsedTime; // Tempo em segundos
-                if( elapsedTime >= 60 ){
 
-                    // Calcula novos valores garantindo que não ultrapasse 100
-                    const newHunger = Math.max(0, Math.min(100, pet.Fome - Math.floor(elapsedTime / 60))); // Diminui fome a cada minuto
-                    const newSleep = Math.max(0, Math.min(100, pet.Sono - Math.floor(elapsedTime / 60))); // Diminui sono a cada  min
-                    const newFun = Math.max(0, Math.min(100, pet.Diversao - Math.floor(elapsedTime / 60))); // Diminui diversão a cada  min
-                    
-                    // Atualizar pet com novos valores
-                    await db.runAsync(
-                        `
-                        UPDATE Pet
-                        SET Fome = ?, Sono = ?, Diversao = ?, Last_update = CURRENT_TIMESTAMP
-                        WHERE id = ?
-                        `,
-                        [newHunger, newSleep, newFun, petId]
-                    );
-                    
-                    console.log(`Status do Pet com id: ${petId}, atualizado.`);
+                
+                
+                if (result) {
+                    const pet = result as Pet;
+                    console.log((pet.elapsedTime));
+                    const elapsedTime = pet.elapsedTime; // Tempo em segundos
+                    if( elapsedTime >= 60 ){
+                        
+                        // Calcula novos valores garantindo que não ultrapasse 100
+                        const newHunger = Math.max(0, Math.min(100, pet.Fome - Math.floor(elapsedTime / 60))); // Diminui fome a cada minuto
+                        const newSleep = Math.max(0, Math.min(100, pet.Sono - Math.floor(elapsedTime / 60))); // Diminui sono a cada  min
+                        const newFun = Math.max(0, Math.min(100, pet.Diversao - Math.floor(elapsedTime / 60))); // Diminui diversão a cada  min
+                        
+                        // Atualizar pet com novos valores
+                        await db.runAsync(
+                            `
+                            UPDATE Pet
+                            SET Fome = ?, Sono = ?, Diversao = ?, Last_update = CURRENT_TIMESTAMP
+                            WHERE id = ?
+                            `,
+                            [newHunger, newSleep, newFun, petId]
+                        );
+                        
+                        console.log(`Status do Pet com id: ${petId}, atualizado.`);
+                        
+                        return { newHunger, newSleep, newFun }
+                        
+                    } else {
+                        const newHunger = pet.Fome;
+                        const newSleep = pet.Sono;
+                        const newFun = pet.Diversao;
+                        console.log(`Status do Pet com id: ${petId}, não precisa ser atualizado.`)
 
-                } else {
-                    console.log(`Status do Pet com id: ${petId}, não precisa ser atualizado`)
+                        return { newHunger, newSleep, newFun }
                 }
     
             } else {
@@ -88,26 +98,72 @@ export function usePetsDB() {
         } catch (error) {
             console.error('Erro ao atualizar o status do pet:', error);
         }
+
+        return null
     };
 
 
-    return { addPet, getAllPets, updatePetStatus }
+    async function toFeed(petId:number) {
+
+        try {
+            const result = await db.getFirstAsync<Pet>(
+                `SELECT Fome FROM Pet WHERE id = ?`, [petId]);
+
+            if(result){
+                const pet = result as Pet;
+                const comida = 20;
+                if(pet.Fome + comida > 100){
+                    const newHunger = 100;
+
+                    await db.runAsync(
+                        `
+                        UPDATE Pet
+                        SET Fome = ?, Last_update = CURRENT_TIMESTAMP
+                        WHERE id = ?;
+                        `,
+                        [newHunger, petId]
+                    );
+
+                    return { newHunger }
+                    
+                } else {
+                    const newHunger = pet.Fome + 20;
+                    
+                    await db.runAsync(
+                        `
+                        UPDATE Pet
+                        SET Fome = ?, Last_update = CURRENT_TIMESTAMP
+                        WHERE id = ?;
+                        `,
+                        [newHunger, petId]
+                    );
+
+                    return { newHunger }
+                }
+            } else {
+                console.error(`Erro ao encontrar o pet com id: ${petId}`)
+            }
+            
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    async function toSleep(petId: number){
+        try {
+            await db.runAsync(
+                `UPDATE Pet
+                SET Sono = 100 WHERE id = ?;`,[petId]
+            );
+
+            return { newSleep: 100 }
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    return { addPet, getAllPets, updatePetStatus, toFeed, toSleep }
 }
-
-
-
-
-
-/*
-//pra buscar os dinos cadastrados
-export const getAllPets = async () => { //essa função ta meio(muito) porca então se algo de PROBLEMA é bom olhar aqui
-    const result = await db.prepareAsync(
-        `SELECT * FROM Pet`
-    );
-
-    if(result) {
-        console.log(result);
-        console.log('retorno teste 2')
-    };
-};*/
 
