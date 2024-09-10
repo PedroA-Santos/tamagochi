@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         color: "#392629",
         fontFamily: "Daydream",
         fontSize:24,
-        
+        borderRadius:30
 
     }
 });

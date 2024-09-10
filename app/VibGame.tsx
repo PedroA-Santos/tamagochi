@@ -118,7 +118,7 @@ const ReactionGame = () => {
     const exitGame = () => {
         setIsGameActive(false); // Termina o jogo ao sair
         Vibration.cancel(); // Parar a vibração ao sair do jogo
-        router.push("/teladetalhe");
+        router.back();
     };
 
     // Configura o estilo da imagem do dino com base na animação
