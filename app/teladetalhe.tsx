@@ -9,7 +9,7 @@ const Teladetalhe = () => {
     const { nomePet, imagePet, petId } = useLocalSearchParams();
     const { updatePetStatus, toFeed, toSleep } = usePetsDB();
 
-    const petIDNumber = Number(petId)//recuperando o parametro do ID que vem como string
+    const petIDNumber = Number(petId)//alterando o parametro do ID que vem como string
 
     // Configurando animação de escala para cada botão
     const scaleAnim1 = useRef(new Animated.Value(1)).current;
@@ -57,7 +57,10 @@ const Teladetalhe = () => {
   
 
     const playGames = () => {
-        router.push("/telajogos");
+        router.push({
+            pathname: "/telajogos",
+            params: { petId } //para navegar até a tela de jogos com  o id do pet
+        });
     };
 
 

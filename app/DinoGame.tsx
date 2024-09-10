@@ -3,25 +3,36 @@ import { View, StyleSheet, Animated, Text, Image, TouchableWithoutFeedback, Easi
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import dinoSprite from '@/assets/images/sprites/azul/moveRS.gif';
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+
+import { usePetsDB } from '@/DataBase/db/usePetsDB';
+
 
 
 const DinoGame = () => {
+    const { petId } = useLocalSearchParams(); //recupera o id do dino
+    const petIDNumber = Number(petId); //transformando em numero
+    const idGame = 1; // definindo que o id desse jogo é um para usar no toFun()
+
+    const { toFun } = usePetsDB();
+
+    
     const [isJumping, setIsJumping] = useState(false); //status de pulo
     const [obstaclePosition, setObstaclePosition] = useState(new Animated.Value(-50)); //obstáculo
     const jumpHeight = useRef(new Animated.Value(0)).current;
     const [gameOver, setGameOver] = useState(true);
     const [currentJumpHeight, setCurrentJumpHeight] = useState(0);
     const [score, setScore] = useState(0);
-
-
+    
+    
     const floor = require('@/assets/images/sprites/BackgroundLayers/Layer_0001_8.png'); // imagem do piso
     const obstacleImage = require('@/assets/images/sprites/Cactus/tile000.png') //imagem do obstaculo
     const router = useRouter()
-
-
+    
+    
     //função de reset do jogo ----
-    const resetGame = () => {
+    const resetGame = async () => {
+        
         setObstaclePosition(new Animated.Value(-50));
         setGameOver(false);
         setIsJumping(false);
@@ -29,15 +40,15 @@ const DinoGame = () => {
         jumpHeight.setValue(0);
         setScore(0);
     };
-
+    
     const exitGame = async () => {
         // Desbloqueia a orientação da tela ao sair do jogo
         await ScreenOrientation.unlockAsync();
-
+        
         // Navega de volta para a tela de detalhes
         router.push('/teladetalhe');
     };
-
+    
     //função de pontos do jogo ------
     useEffect(() => {
         if (!gameOver) {
@@ -46,9 +57,11 @@ const DinoGame = () => {
             }, 50) //define o tempo pra subir os pontos
 
             return () => clearInterval(interval);
+        }else{
+            toFun(petIDNumber, score, idGame);
         }
     }, [gameOver]);
-
+    
     //Animação Pulo -------
     const handleJump = () => {
         if (!isJumping && !gameOver) {
@@ -133,7 +146,7 @@ const DinoGame = () => {
     }, [obstaclePosition, gameOver]);
 
 
-
+console.log
 
 
     //função para veririficar a colisão --------
@@ -165,6 +178,7 @@ const DinoGame = () => {
             setGameOver(true);
             //alert("Game Over!");
             console.log(`Game Over! ${dinoBottom}-${dinoTop}`);
+            
         }
 
     };

@@ -62,12 +62,12 @@ export function usePetsDB() {
                     const pet = result as Pet;
                     console.log((pet.elapsedTime));
                     const elapsedTime = pet.elapsedTime; // Tempo em segundos
-                    if( elapsedTime >= 60 ){
+                    if( elapsedTime >= 30 ){
                         
                         // Calcula novos valores garantindo que não ultrapasse 100
-                        const newHunger = Math.max(0, Math.min(100, pet.Fome - Math.floor(elapsedTime / 60))); // Diminui fome a cada minuto
-                        const newSleep = Math.max(0, Math.min(100, pet.Sono - Math.floor(elapsedTime / 60))); // Diminui sono a cada  min
-                        const newFun = Math.max(0, Math.min(100, pet.Diversao - Math.floor(elapsedTime / 60))); // Diminui diversão a cada  min
+                        const newHunger = Math.max(0, Math.min(100, pet.Fome - Math.floor(elapsedTime / 30))); // Diminui fome a cada 30 seg
+                        const newSleep = Math.max(0, Math.min(100, pet.Sono - Math.floor(elapsedTime / 30))); // Diminui sono a cada  30 seg
+                        const newFun = Math.max(0, Math.min(100, pet.Diversao - Math.floor(elapsedTime / 30))); // Diminui diversão a cada  30 seg
                         
                         // Atualizar pet com novos valores
                         await db.runAsync(
@@ -118,12 +118,13 @@ export function usePetsDB() {
                     await db.runAsync(
                         `
                         UPDATE Pet
-                        SET Fome = ?, Last_update = CURRENT_TIMESTAMP
-                        WHERE id = ?;
+                        SET Fome = ? WHERE id = ?;
                         `,
                         [newHunger, petId]
                     );
 
+                    updatePetStatus(petId);
+                    
                     return { newHunger }
                     
                 } else {
@@ -132,12 +133,12 @@ export function usePetsDB() {
                     await db.runAsync(
                         `
                         UPDATE Pet
-                        SET Fome = ?, Last_update = CURRENT_TIMESTAMP
-                        WHERE id = ?;
+                        SET Fome = ? WHERE id = ?;
                         `,
                         [newHunger, petId]
                     );
-
+                    updatePetStatus(petId);
+                    
                     return { newHunger }
                 }
             } else {
@@ -148,22 +149,75 @@ export function usePetsDB() {
             console.error(error);
         }
     };
-
+    
     async function toSleep(petId: number){
         try {
             await db.runAsync(
                 `UPDATE Pet
                 SET Sono = 100 WHERE id = ?;`,[petId]
             );
-
+            
+            updatePetStatus(petId);
             return { newSleep: 100 }
-
+            
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+    
+    async function toFun(petId: number, score: number, idGame: number) {
+        let newScore = 0;
+        if(idGame == 1){
+        
+            newScore = score / 25;
+        
+        } else if (idGame == 2){
+
+            newScore = score * 5;
+
+        }
+
+        try {
+            const result = await db.getFirstAsync<Pet>(
+                `SELECT Diversao FROM Pet WHERE id = ?`,[petId]
+            );
+            
+            if(result){
+                const pet = result as Pet;
+                if(pet.Diversao + newScore > 100){
+                    const newFun = 100;
+                    
+                    await db.runAsync(
+                        `
+                        UPDATE Pet
+                        SET Diversao = ? WHERE id = ?;
+                        `,
+                        [newFun, petId]
+                    );
+                    console.log('Se divertiu 1: '+newFun);
+                    updatePetStatus(petId);
+                    
+                } else {
+                    const newFun = pet.Diversao + newScore;
+                    
+                    await db.runAsync(
+                        `
+                        UPDATE Pet
+                        SET Diversao = ? WHERE id = ?;
+                        `,
+                        [newFun, petId]
+                    );
+                    
+                    console.log('Se divertiu 2: '+newFun);
+                    updatePetStatus(petId);
+                }
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    };
 
 
-    return { addPet, getAllPets, updatePetStatus, toFeed, toSleep }
+    return { addPet, getAllPets, updatePetStatus, toFeed, toSleep, toFun }
 }
 

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Vibration, Alert, Animated, Easing, ImageBackground } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+
+import { usePetsDB } from '@/DataBase/db/usePetsDB';
+
 
 const ReactionGame = () => {
     const [isGameActive, setIsGameActive] = useState<boolean>(false);
@@ -10,6 +13,14 @@ const ReactionGame = () => {
     const [canPress, setCanPress] = useState<boolean>(false); // Permite saber se o usuário pode pressionar
     const [vibrationTimeout, setVibrationTimeout] = useState<NodeJS.Timeout | null>(null);
     const [dinoAnimation, setDinoAnimation] = useState<Animated.Value>(new Animated.Value(0)); // Animação do dino
+
+    const { petId } = useLocalSearchParams(); //recupera o id do dino
+    const petIDNumber = Number(petId); //transformando em numero
+
+    const idGame = 2;
+
+    const { toFun } = usePetsDB();
+
 
     useEffect(() => {
         if (isGameActive) {
@@ -101,6 +112,7 @@ const ReactionGame = () => {
         setCanPress(false);
         Vibration.cancel(); // Parar a vibração quando o jogo terminar
         Alert.alert('Fim do Jogo', `Sua pontuação final foi: ${score}`);
+        toFun(petIDNumber, score, idGame)
     };
 
     const exitGame = () => {
