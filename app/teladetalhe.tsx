@@ -16,7 +16,8 @@ const Teladetalhe = () => {
     const scaleAnim2 = useRef(new Animated.Value(1)).current;
     const scaleAnim3 = useRef(new Animated.Value(1)).current;
 
-    
+
+
 
     // Estados para controlar os valores de sono, fome e diversão
     const [sleep, setSleep] = useState<number>(100); // Valor de 0 a 100
@@ -27,18 +28,18 @@ const Teladetalhe = () => {
     async function attPet() {
         const res = await updatePetStatus(petIDNumber);
 
-        if(res) {
+        if (res) {
             setSleep(res.newSleep);
             setHunger(res.newHunger);
             setFun(res.newFun);
         }
     };
-    
-    useFocusEffect(() =>{
+
+    useFocusEffect(() => {
         attPet();
     });
-    
-    
+
+
 
     const getBackGroundColor = () => {
         switch (imagePet) {
@@ -54,33 +55,37 @@ const Teladetalhe = () => {
                 return "#ffff";
         }
     };
-  
+
 
     const playGames = () => {
-        router.push("/telajogos");
+        router.push({
+            pathname: "/telajogos",
+            params: { petId, nomePet, imagePet } //para navegar até a tela de jogos com  o id do pet
+
+        });
     };
 
 
     async function alimentar() {
-        const res = await toFeed(petIDNumber); 
-        
-        if(res){
+        const res = await toFeed(petIDNumber);
+
+        if (res) {
             setHunger(res.newHunger);
         }
     };
 
     async function dormir() {
         const result = await toSleep(petIDNumber);
-      
+
         if (result) {
-            
+
             // Timer para acordar o pet depois de, por exemplo, 1 minuto (60000 ms)
             setTimeout(() => {
-            setSleep(result.newSleep);
-            updatePetStatus(petIDNumber); // Atualiza o status do pet após o sono
-          }, (1 * 60000));
+                setSleep(result.newSleep);
+                updatePetStatus(petIDNumber); // Atualiza o status do pet após o sono
+            }, (1 * 60000));
         }
-      };
+    };
 
 
 
@@ -111,6 +116,27 @@ const Teladetalhe = () => {
         </View>
     );
 
+    const statusPet = () => {
+        const statusSoma = hunger + sleep + fun;
+        if (statusSoma === 0) {
+            return "Morto";
+        } else if (statusSoma <= 50) {
+            return "Crítico";
+        } else if (statusSoma <= 100) {
+            return "Muito Triste";
+        } else if (statusSoma <= 150) {
+            return "Triste";
+        } else if (statusSoma <= 200) {
+            return "OK";
+        } else if (statusSoma <= 250) {
+            return "Bem";
+        } else {
+            return "Muito bem";
+        }
+    };
+
+
+
 
     return (
         <ImageBackground
@@ -122,6 +148,10 @@ const Teladetalhe = () => {
             {renderAttributeBar('Sono', sleep)}
             {renderAttributeBar('Fome', hunger)}
             {renderAttributeBar('Diversao', fun)}
+            <View>
+                <Text style={styles.statusText}> Status: {statusPet()}</Text>
+
+            </View>
             <View style={styles.container}>
                 <Image
                     source={
@@ -219,6 +249,15 @@ const styles = StyleSheet.create({
         borderColor: "#000",
 
     },
+    statusText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#fff',
+        textAlign: 'center',
+        marginTop: 20,
+        fontFamily:"Daydream"
+    },
+
     // Estilos para as barrinhas de atributos
     attributeContainer: {
         width: '70%',
