@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, Animated } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import Header from "@/mycomponents/header";
@@ -23,21 +23,46 @@ const Teladetalhe = () => {
     const [sleep, setSleep] = useState<number>(100); // Valor de 0 a 100
     const [hunger, setHunger] = useState<number>(100); // Valor de 0 a 100
     const [fun, setFun] = useState<number>(100); // Valor de 0 a 100
+    const [dormindo, setDormindo] = useState(false);
 
     //Atualiza os status do pet
-    async function attPet() {
-        const res = await updatePetStatus(petIDNumber);
 
-        if (res) {
-            setSleep(res.newSleep);
-            setHunger(res.newHunger);
-            setFun(res.newFun);
+
+    useEffect(() => {
+        if (dormindo) {
+            const interval = setInterval( async () => {
+                setSleep((prevSleep) => {
+                    if (prevSleep >= 100) {
+                        toSleep(petIDNumber, prevSleep); // Chama a função quando o sono atinge 100
+                        clearInterval(interval); // Limpa o intervalo
+                        setDormindo(false);
+                        return 100; // Garante que o valor não ultrapasse 100
+                    }
+                    return prevSleep + 1; // Incrementa o valor de sono
+                });
+            }, 200); // Define o tempo para subir os pontos em ms
+    
+            return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente ou quando dormindo mudar
         }
-    };
+    }, [dormindo]);
+    
+    
 
-    useFocusEffect(() => {
-        attPet();
-    });
+    useFocusEffect(
+        useCallback(() => {
+            async function fetchAndUpdatePet() {
+                const res = await updatePetStatus(petIDNumber);
+    
+                if (res) {
+                    setSleep(res.newSleep);
+                    setHunger(res.newHunger);
+                    setFun(res.newFun);
+                }
+            }
+    
+            fetchAndUpdatePet(); // Atualiza o pet quando a tela ganha foco
+        }, [petIDNumber])
+    );
 
 
 
@@ -73,16 +98,12 @@ const Teladetalhe = () => {
         }
     };
 
-    async function dormir() {
-        const result = await toSleep(petIDNumber);
-
-        if (result) {
-
-            // Timer para acordar o pet depois de, por exemplo, 1 minuto (60000 ms)
-            setTimeout(() => {
-                setSleep(result.newSleep);
-                updatePetStatus(petIDNumber); // Atualiza o status do pet após o sono
-            }, (1 * 60000));
+    function dormir() {
+        if(!dormindo){
+            setDormindo(true)
+        }else{
+            setDormindo(false)
+            toSleep(petIDNumber, sleep)
         }
     };
 

@@ -7,7 +7,7 @@ import { usePetsDB } from '@/DataBase/db/usePetsDB';
 import { Pet } from "@/DataBase/Models/Models";
 
 const telalistagem = () => {
-    const { getAllPets } = usePetsDB();
+    const { getAllPets, updatePetStatus } = usePetsDB();
     const [pets, setPets] = useState<Pet[]>([]);
     const router = useRouter();
 

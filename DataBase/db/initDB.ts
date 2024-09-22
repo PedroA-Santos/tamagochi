@@ -2,7 +2,6 @@ import { type SQLiteDatabase } from 'expo-sqlite';
 
 export async function initDatabase(db: SQLiteDatabase) {
     await db.execAsync(`
-       
 
         CREATE TABLE IF NOT EXISTS Pet (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
