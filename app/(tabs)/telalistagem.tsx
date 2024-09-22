@@ -29,7 +29,8 @@ const telalistagem = () => {
         });
     };
 
-    // Função para renderizar as barras de status com tipagem
+
+    // Função para renderizar as barras de atributos com tipagem
     const renderAttributeBar = (label: string, value: number) => (
         <View style={styles.attributeContainer}>
             <Text style={styles.attributeLabel}>{label}</Text>
@@ -38,6 +39,28 @@ const telalistagem = () => {
             </View>
         </View>
     );
+    const getStatusPet = (hunger: number, sleep: number, fun: number) => {
+        const statusSoma = hunger + sleep + fun;
+
+        if (statusSoma === 0) {
+            return "Morto";
+        } else if (statusSoma <= 50) {
+            return "Crítico";
+        } else if (statusSoma <= 100) {
+            return "Muito Triste";
+        } else if (statusSoma <= 150) {
+            return "Triste";
+        } else if (statusSoma <= 200) {
+            return "OK";
+        } else if (statusSoma <= 250) {
+            return "Bem";
+        } else {
+            return "Muito bem";
+        }
+    };
+
+
+
 
     return (
         <ImageBackground
@@ -90,6 +113,11 @@ const telalistagem = () => {
                                         {renderAttributeBar('Sono', item.Sono)}
                                         {renderAttributeBar('Fome', item.Fome)}
                                         {renderAttributeBar('Diversao', item.Diversao)}
+
+                                        {/* Exibição do status do pet */}
+                                        <Text style={styles.statusText}>
+                                            Status: {getStatusPet(item.Fome, item.Sono, item.Diversao)}
+                                        </Text>
                                         <TouchableOpacity
                                             style={styles.buttonSelect}
                                             onPress={() => handleSelectPet(item.id, item.Nome, item.Tipo_Cor)}
@@ -172,9 +200,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     petName: {
-        fontSize: 16,
+        fontSize: 12,
         textAlign: "center",
-        fontWeight: "bold",
         color: "#ffff",
         textShadowColor: "#000",
         textShadowRadius: 9,
@@ -197,14 +224,14 @@ const styles = StyleSheet.create({
     barBackground: {
         width: '100%',
         height: 20,
-        backgroundColor: '#ccc',
+        backgroundColor: '#392629',
         borderRadius: 10,
         borderWidth: 2,
         borderColor: "#000"
     },
     barForeground: {
         height: '100%',
-        backgroundColor: '#4caf50',
+        backgroundColor: '#ede7d6',
         borderRadius: 10,
     },
     buttonSelect: {
@@ -217,13 +244,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 5,
         padding: 5,
-        marginTop: 10
+        marginTop: 10,
+
     },
     buttonText: {
         color: "#392620",
-        fontSize: 16,
-        fontWeight: "bold"
+        fontSize: 8,
+        fontFamily: "Daydream"
+    }, statusText: {
+        fontSize: 12,
+        color: '#fff',
+        fontFamily: 'Daydream',
+        marginTop: 5,
+        textAlign: 'center',
     },
+
 });
 
 export default telalistagem;

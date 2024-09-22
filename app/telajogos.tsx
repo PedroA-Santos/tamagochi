@@ -12,16 +12,17 @@ const telajogos = () => {
     const handleGameDino = () => {
         console.log(petId);
         router.push({
-            pathname:"/DinoGame",
+            pathname: "/DinoGame",
             params: { petId }
         })
     }
 
     const handleGameVib = () => {
         router.push({
-            pathname:"/VibGame",
+            pathname: "/VibGame",
             params: { petId }
-        })    }
+        })
+    }
 
 
     return (
@@ -31,6 +32,7 @@ const telajogos = () => {
             style={styles.background}>
             <Header title='DINOGOSHI'></Header>
             <View style={styles.container}>
+                <Text style={styles.title}>Selecione seu Jogo</Text>
                 <TouchableOpacity
                     style={styles.itemContainer}
                     onPress={handleGameDino}>
@@ -60,8 +62,8 @@ const styles = StyleSheet.create({
         resizeMode: "cover"
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: 20,
+    
         marginBottom: 20,
         color: "#ffff",
         fontFamily: "Daydream"
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
         borderWidth: 4,
         borderColor: "#392629",
         width: 350,
-        height:200,
+        height: 200,
         alignItems: "center",
         justifyContent: "center"
     },
@@ -94,8 +96,8 @@ const styles = StyleSheet.create({
     }, textDino: {
         color: "#392629",
         fontFamily: "Daydream",
-        fontSize:24,
-        borderRadius:30
+        fontSize: 24,
+        borderRadius: 30
 
     }
 });

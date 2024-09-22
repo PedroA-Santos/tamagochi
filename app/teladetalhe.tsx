@@ -8,6 +8,8 @@ import { Pet } from "@/DataBase/Models/Models";
 const Teladetalhe = () => {
     const { nomePet, imagePet, petId } = useLocalSearchParams();
     const { updatePetStatus, toFeed, toSleep } = usePetsDB();
+    const [dormindo, setDormindo] = useState(false);
+
 
     const petIDNumber = Number(petId)//alterando o parametro do ID que vem como string
 
@@ -44,15 +46,15 @@ const Teladetalhe = () => {
     const getBackGroundColor = () => {
         switch (imagePet) {
             case "pet1":
-                return "#52543e";
+                return "#525439";
             case "pet2":
-                return "#3e4754";
+                return "#3e4759";
             case "pet3":
-                return "#46543e";
+                return "#465439";
             case "pet4":
-                return "#543E3E";
+                return "#543E39";
             default:
-                return "#ffff";
+                return "#fff9";
         }
     };
 
@@ -74,17 +76,25 @@ const Teladetalhe = () => {
     };
 
     async function dormir() {
+        if (sleep >= 100) {
+            alert("Seu pet já está totalmente descansado!");
+            return; // Não permite dormir se o sono está cheio
+        }
+
         const result = await toSleep(petIDNumber);
 
         if (result) {
-
-            // Timer para acordar o pet depois de, por exemplo, 1 minuto (60000 ms)
+            setDormindo(true); // Ativando o modo de sono
             setTimeout(() => {
                 setSleep(result.newSleep);
+                if (result.newSleep >= 100) {
+                    setDormindo(false); // Desativando o modo de sono se o sono estiver cheio
+                }
                 updatePetStatus(petIDNumber); // Atualiza o status do pet após o sono
-            }, (1 * 60000));
+            }, (1 * 60000)); // 1 minuto de sono
         }
-    };
+    }
+
 
 
 
@@ -104,7 +114,7 @@ const Teladetalhe = () => {
         }).start();
     };
 
-    // Função para renderizar as barras de atributos
+
     // Função para renderizar as barras de atributos com tipagem
     const renderAttributeBar = (label: string, value: number) => (
         <View style={styles.attributeContainer}>
@@ -115,6 +125,7 @@ const Teladetalhe = () => {
         </View>
     );
 
+    //IF DO STATUS DO PET
     const statusPet = () => {
         const statusSoma = hunger + sleep + fun;
         if (statusSoma === 0) {
@@ -147,6 +158,17 @@ const Teladetalhe = () => {
             {renderAttributeBar('Sono', sleep)}
             {renderAttributeBar('Fome', hunger)}
             {renderAttributeBar('Diversao', fun)}
+            {/* VERIFICAÇÃO PARA MUDAR O ESTILO QUANDO ESRIVER DORMINDO */}
+            {dormindo && (
+                <View style={styles.sleepOverlay}>
+                    <Text style={styles.iconSleep}>Dormindo</Text>
+                    <TouchableOpacity onPress={() => setDormindo(false)}>
+                        <Text style={styles.awakeButton}>Acordar</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+
+
             <View>
                 <Text style={styles.statusText}> Status: {statusPet()}</Text>
 
@@ -174,9 +196,11 @@ const Teladetalhe = () => {
                         onPressOut={() => handlePressOut(scaleAnim1)}
                     >
                         <Animated.Image
-                            source={require("@/assets/images/controle-de-video-game.png")}
+                            source={require("@/assets/images/play.png")}
                             style={[styles.buttonImageIcons, { transform: [{ scale: scaleAnim1 }] }]}
                         />
+
+                        <Text style={styles.iconText}>Jogar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={alimentar}
@@ -184,9 +208,11 @@ const Teladetalhe = () => {
                         onPressOut={() => handlePressOut(scaleAnim2)}
                     >
                         <Animated.Image
-                            source={require("@/assets/images/pizza.png")}
+                            source={require("@/assets/images/comida.png")}
                             style={[styles.buttonImageIcons, { transform: [{ scale: scaleAnim2 }] }]}
                         />
+
+                        <Text style={styles.iconText}>Alimentar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={dormir}
@@ -194,9 +220,10 @@ const Teladetalhe = () => {
                         onPressOut={() => handlePressOut(scaleAnim3)}
                     >
                         <Animated.Image
-                            source={require("@/assets/images/lua-e-estrelas.png")}
+                            source={require("@/assets/images/lua.png")}
                             style={[styles.buttonImageIcons, { transform: [{ scale: scaleAnim3 }] }]}
                         />
+                        <Text style={styles.iconText}>Dormir</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -221,40 +248,70 @@ const styles = StyleSheet.create({
         height: 200,
         marginBottom: 20,
         borderWidth: 4,
-        borderRadius: 15,
+        borderRadius: 20,
+        borderColor: "#ede7d6"
     },
     petName: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: "#fff",
+        fontSize: 22,
+        color: "#ede7d6",
         textShadowColor: "#000",
         textShadowRadius: 5,
         fontFamily: "Daydream",
+        backgroundColor: "#392629",
+        padding: 5,
+        width: 200,
+        textAlign: "center",
+        borderWidth: 3,
+        borderColor: "#ede7d6",
+
+
+
+
     },
     petIconsContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: 'center',
         width: '90%',
-        bottom: -120,
+        bottom: -65,
         padding: 5,
     },
     buttonImageIcons: {
         height: 100,
         width: 100,
-        backgroundColor: "#fff9",
-        borderRadius: 10,
-        borderWidth: 4,
-        borderColor: "#000",
+        resizeMode: "cover",
+        borderWidth: 3,
+        borderColor: "#ede7d6",
+        padding: 10,
+        borderRadius: 8,
+        backgroundColor: "#111111",
+        marginVertical: 3
+
+
 
     },
     statusText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#fff',
-        textAlign: 'center',
-        marginTop: 20,
-        fontFamily:"Daydream"
+        fontSize: 12,
+        color: '#392629',
+        marginTop: 15,
+        fontFamily: "Daydream",
+        backgroundColor: "#EDE7D6",
+        width: 300,
+        marginLeft: 44,
+        borderWidth: 3,
+        borderColor: "#392629",
+        padding: 3,
+        height: "auto",
+        textAlign: "center",
+        textAlignVertical: "center"
+
+    },
+    iconText: {
+        fontSize: 10,
+        fontFamily: "Daydream",
+        color: "#ede7d6",
+        textAlign: "center",
+        marginTop: 5
     },
 
     // Estilos para as barrinhas de atributos
@@ -279,14 +336,44 @@ const styles = StyleSheet.create({
     barBackground: {
         width: '100%',
         height: 20,
-        backgroundColor: '#ccc',
+        backgroundColor: '#392629',
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: "#000"
+        borderColor: "#392629",
+        margin: 5
     },
     barForeground: {
         height: '100%',
-        backgroundColor: '#4caf50',
+        backgroundColor: '#ede7d6',
         borderRadius: 10,
+    }, sleepOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo preto semi-transparente
+        zIndex: 1, // Certifica-se de que fica sobre os outros elementos
     },
+    iconSleep: {
+        fontSize: 36,
+        fontFamily: "Daydream",
+        color: "#ede7d6",
+        justifyContent: "center",
+        textAlign: "center",
+        marginTop: 400
+    }, awakeButton: {
+        fontSize: 24,
+        color: '#ede7d6',
+        backgroundColor: '#392629',
+        padding: 10,
+        marginTop: 20,
+        textAlign: 'center',
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: '#ede7d6',
+        width: 300,
+        marginLeft: 60
+    },
+
 });
